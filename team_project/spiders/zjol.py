@@ -3,8 +3,8 @@ from io import BytesIO
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 
-import sava2Hbase
-from news_spider.items import zjolItem
+from team_project import sava2Hbase
+from team_project.items import zjolItem
 from bs4 import BeautifulSoup
 from scrapy_splash import SplashRequest
 import requests
@@ -15,10 +15,6 @@ from pyppeteer import launch
 import asyncio
 
 #启动splash
-
-# 截图序号
-global num
-num = 0
 
 # 记录层数
 global level
@@ -32,13 +28,6 @@ now_level = 1
 global url_dic
 url_dic={}
 
-#存储图片url
-global img_src_list
-img_src_list=[]
-
-#存储图片字节数组
-global img_content_list
-img_content_list=[]
 
 
 
@@ -148,8 +137,8 @@ class ZjolSpider(RedisSpider):
         global level
         global now_level
         global url_dic
-        global img_content_list
-        global img_src_list
+        img_content_list=[]
+        img_src_list=[]
 
         pic_list = self.pic_find(response)
 

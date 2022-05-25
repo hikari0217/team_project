@@ -1,22 +1,19 @@
 from io import BytesIO
 
 import scrapy
-from news_spider.items import SouhuItem
+from team_project.items import SouhuItem
 from scrapy.linkextractors import LinkExtractor
 from bs4 import BeautifulSoup
 from scrapy_splash import SplashRequest
 import requests
-import base64
-from news_spider import sava2Hbase
+from team_project import sava2Hbase
 from scrapy_redis.spiders import RedisSpider
 from pyppeteer import launch
 import asyncio
 
 #启动splash
 
-#截图序号
-global num
-num=0
+
 
 #记录层数
 global level
@@ -29,15 +26,6 @@ now_level=1
 #外链解析中的链接采用键值对存储，链接作为key，层数作为values，可以通过控制values的上限控制其爬取层数
 global url_dic
 url_dic={}
-
-#存储图片url
-global img_src_list
-img_src_list=[]
-
-#存储图片字节数组
-global img_content_list
-img_content_list=[]
-
 
 #网页渲染脚本
 script = """
@@ -144,8 +132,10 @@ class SouhuSpider(RedisSpider):
         global level
         global now_level
         global url_dic
-        global img_content_list
-        global img_src_list
+        #存储图片字节数组
+        img_content_list=[]
+        #存储所有图片url
+        img_src_list=[]
 
         #找到所有图片url
         pic_list = self.pic_find(response)

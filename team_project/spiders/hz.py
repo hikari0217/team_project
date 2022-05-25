@@ -3,19 +3,18 @@ import redis
 import requests
 import scrapy
 from scrapy.linkextractors import LinkExtractor
-from news_spider.items import hzItem
+from team_project.items import hzItem
 from bs4 import BeautifulSoup
 from scrapy_splash import SplashRequest
 import time
-import sava2Hbase
+from team_project import sava2Hbase
 import base64
 from scrapy_redis.spiders import RedisSpider
 from pyppeteer import launch
 import asyncio
 
 start = time.time()
-global num
-num=0
+
 
 #记录层数
 global level
@@ -29,27 +28,10 @@ now_level=1
 global url_dic
 url_dic={}
 
-#存储图片url
-global img_src_list
-img_src_list=[]
-
-#存储图片字节数组
-global img_content_list
-img_content_list=[]
 
 
 
-#截图脚本
-# script_png = """
-#                 function main(splash, args)
-#                 splash:go(splash.args.url)
-#                 splash:set_viewport_size(1500, 10000)
-#                 local scroll_to = splash:jsfunc("window.scrollTo")
-#                 scroll_to(0, 2800)
-#                 splash:wait(8)
-#                 return {png=splash:png()}
-#                 end
-#                 """
+
 
 class HzSpider(RedisSpider):
     name = 'hz'
@@ -126,8 +108,10 @@ class HzSpider(RedisSpider):
         global level
         global now_level
         global url_dic
-        global img_content_list
-        global img_src_list
+        #当前页面图片字节数组列表
+        img_content_list=[]
+        #当前页面图片src
+        img_src_list=[]
 
         pic_list = self.pic_find(response)
 
@@ -147,7 +131,7 @@ class HzSpider(RedisSpider):
 
             # 获取图片响应
             try:
-                pic_res = requests.get(src)
+                pic_res = requests.get(src,verify=False, headers={'Connection':'close'})
             except Exception:
                 print('Error Url:',src)
                 continue
